@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrollbar::-webkit-scrollbar{
+    width: 1%;
+
+}
+
+.scrollbar::-webkit-scrollbar-thumb{
+    background: transparent;
+    border-radius: 10px;
+}
+.scrollbar::-webkit-scrollbar-thumb:hover{
+    background:#272727;
+}
+.scrollbar::-webkit-scrollbar.track{
+    background: transparent;
+}
+
+  .nav-menu{
+    left: -100%;
+    transition: 850ms;
+  }
+
+  .nav-menu.active{
+    left: 0;
+    transition: 350ms;
+  }
