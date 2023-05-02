@@ -13,6 +13,7 @@ import { setUser } from '../slices/userSlicer'
 const Home = () => {
   const [videos, setVideos] = useState([])
   const dispatch = useDispatch()
+  console.log(videos)
 
   useEffect(() => {
     const q = query(collection(db, 'videos'))
@@ -56,11 +57,14 @@ const Home = () => {
           {videos.length === 0 ? (
             <div className='h-[86vh]'></div>
           ) : (
+            
             videos.map((video, index) => (
+              
               <Link to={`/video/${video.id}`} key={index}>
                 <Video {...video} />
               </Link>
             ))
+            
           )}
         </div>
       </div>

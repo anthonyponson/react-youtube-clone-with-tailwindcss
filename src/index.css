@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
-@import "~@flaticon/flaticon-uicons/css/all/all";
+
 ::before,
 ::after {
   padding: 0;

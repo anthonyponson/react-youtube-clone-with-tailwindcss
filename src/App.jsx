@@ -7,17 +7,14 @@ import { initialState, stateReducer } from './Reducer'
 import { useReducer } from 'react'
 
 function App() {
-  const [state , dispatch] = useReducer(stateReducer, initialState)
   return (
-    <stateContext.Provider value={{state,dispatch}}>
       <BrowserRouter>
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/video:id' element={<Video />} />
+          <Route path='/video/:id' element={<Video />} />
         </Routes>
       </BrowserRouter>
-    </stateContext.Provider>
   )
 }
 
