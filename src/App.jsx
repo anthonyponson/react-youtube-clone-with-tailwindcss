@@ -9,7 +9,7 @@ import { useReducer } from 'react'
 function App() {
   const [state , dispatch] = useReducer(stateReducer, initialState)
   return (
-    <stateContext.Provider value={{state, dispatch:dispatch}}>
+    <stateContext.Provider value={{state,dispatch}}>
       <BrowserRouter>
         <Navbar />
         <Routes>

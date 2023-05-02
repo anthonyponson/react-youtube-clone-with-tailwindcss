@@ -3,31 +3,39 @@ import { HiOutlineBars3, HiMagnifyingGlass } from 'react-icons/hi2'
 import { BiVideoPlus } from 'react-icons/bi'
 import { FaRegBell } from 'react-icons/fa'
 import { FaMicrophone } from 'react-icons/fa'
-import { SideBarItems } from '../static/data'
 import logo from '../assets/logo.png'
 import { Link } from 'react-router-dom'
-import Sidebar from './SideBars'
-import { stateContext } from '../Context'
-
+import { signInWithPopup, signOut } from 'firebase/auth'
+import { auth, provider } from '../firebase'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser, getUser, toggleSidebar, logout } from '../slices/userSlicer'
 
 const Navbar = () => {
-  const { state, dispatch } = useContext(stateContext);
-  const showSidebar = () => {
-    dispatch({ type: 'TOGGLE_SIDEBAR' });
-    dispatch({ type: 'TOGGLE_SHOW_SIDEBAR' });
+  const dispatch = useDispatch()
+  const user = useSelector(getUser)
+
+  const handleLogin = async () => {
+    const response = await signInWithPopup(auth, provider)
+    dispatch(setUser(response.user))
   }
 
+  const handleLogput = async () =>{
+    dispatch(logout())
+    await signOut(auth)
+  }
+
+  // const { state, dispatch } = useContext(stateContext)
   return (
     <>
       {/* navbar container */}
-      <div className='container relative mx-auto max-w-full bg-black h-14 flex items-center justify-between'>
+      <div className='container flex items-center justify-between fixed mx-auto max-w-full z-50 bg-black h-14 '>
         {/* menu and logo */}
         <div className='flex justify-between items-center'>
           {/* navmenu */}
           <div
             className={`menu-bars text-white p-2 w-10 text-2xl text-center rounded-xl cursor-pointer hover:bg-light_black`}
           >
-            <HiOutlineBars3 onClick={showSidebar} />
+            <HiOutlineBars3 onClick={() => dispatch(toggleSidebar())} />
           </div>
           {/* logo */}
           <div className='py-5 w-28'>
@@ -80,16 +88,28 @@ const Navbar = () => {
           </div>
 
           <div className='max-w-fit pr-2 flex items-center cursor-pointer'>
-            <button className='bg-yt_red px-2 py-1 text-white rounded-md font-semibold text-sm'>Sign In</button>
+            {
+            !user ? (
+              <button
+                className='bg-yt_red px-2 py-1 text-white rounded-md font-semibold text-sm'
+                onClick={handleLogin}
+              >
+                Sign In
+              </button>
+            ) : (
+              <img
+                src={user.photoURL}
+                alt={user.displayName}
+                onClick={handleLogput}
+                className='object-contain rounded-full cursor-pointer w-10 h-10'
+              />
+            )}
+
           </div>
         </div>
       </div>
 
       {/* sidebar */}
-      
-
-      
-
     </>
   )
 }

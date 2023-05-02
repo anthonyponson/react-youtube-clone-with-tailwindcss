@@ -12,6 +12,7 @@ export default {
     extend: {
       colors:{
         black:'#0f0f0f',
+        pitch_black: '#000000',
         yt_red: '#ff0300',
         white: '#f1f1f1',
         light_black: '#272727',
@@ -27,5 +28,5 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
 }
