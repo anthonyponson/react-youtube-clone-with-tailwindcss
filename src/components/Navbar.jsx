@@ -5,7 +5,7 @@ import { FaRegBell } from 'react-icons/fa'
 import { FaMicrophone } from 'react-icons/fa'
 import logo from '../assets/logo.png'
 import { Link } from 'react-router-dom'
-import { signInWithPopup, signOut } from 'firebase/auth'
+import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser, getUser, toggleSidebar, logout } from '../slices/userSlicer'
@@ -19,10 +19,6 @@ const Navbar = () => {
     dispatch(setUser(response.user))
   }
 
-  const handleLogput = async () =>{
-    dispatch(logout())
-    await signOut(auth)
-  }
 
   // const { state, dispatch } = useContext(stateContext)
   return (
@@ -100,7 +96,6 @@ const Navbar = () => {
               <img
                 src={user.photoURL}
                 alt={user.displayName}
-                onClick={handleLogput}
                 className='object-contain rounded-full cursor-pointer w-10 h-10'
               />
             )}

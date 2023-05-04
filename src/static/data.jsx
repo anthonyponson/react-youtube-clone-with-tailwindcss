@@ -56,3 +56,18 @@ export const CategoryItems = [
   'One UI',
   'Stock Android'
 ]
+
+
+export const videos = [
+  {
+    url:"https://firebasestorage.googleapis.com/v0/b/clone-c6054.appspot.com/o/Naruto%20Ep%20Episode%201%20-%20Chia-Anime.mp4?alt=media&token=e9dd3547-0182-407c-8ad5-77d58e9f80bd",
+
+    thum:"https://i.ytimg.com/vi/DttTRPKdq-0/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDEFKxFCfGKJjXCzaHxrtacgs7pMA",
+
+    logo:"https://yt3.ggpht.com/oV1Y-fHP3Dz9VubrGBFGzX2MnyF6Ftnx7a1ijqnAp78BspH-jsvVPHmY1wL9kVPzYGALiKG6LfQ=s88-c-k-c0x00ffffff-no-rj",
+    
+    tittle:"name of the video"
+
+  }
+
+]

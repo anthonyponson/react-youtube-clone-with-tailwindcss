@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Sidebar from '../components/SideBars'
 import { stateContext } from '../Context'
-import { CategoryItems } from '../static/data'
+import { CategoryItems, videos } from '../static/data'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 import { Link } from 'react-router-dom'
@@ -13,7 +13,6 @@ import { setUser } from '../slices/userSlicer'
 const Home = () => {
   const [videos, setVideos] = useState([])
   const dispatch = useDispatch()
-  console.log(videos)
 
   useEffect(() => {
     const q = query(collection(db, 'videos'))
@@ -31,12 +30,11 @@ const Home = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(setUser(user))
-      }
-      else{ 
+      } else {
         dispatch(setUser(null))
       }
     })
-  },[])
+  }, [])
 
   return (
     <>
@@ -57,16 +55,14 @@ const Home = () => {
           {videos.length === 0 ? (
             <div className='h-[86vh]'></div>
           ) : (
-            
             videos.map((video, index) => (
-              
               <Link to={`/video/${video.id}`} key={index}>
                 <Video {...video} />
               </Link>
             ))
-            
           )}
         </div>
+
       </div>
     </>
   )
