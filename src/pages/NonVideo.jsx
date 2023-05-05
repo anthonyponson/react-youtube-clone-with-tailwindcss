@@ -2,7 +2,7 @@ import { addDoc, collection, doc, onSnapshot, query } from 'firebase/firestore'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { auth, db, timestamp } from '../firebase'
 import { BiLike, BiDislike } from 'react-icons/bi'
 import { RiShareForwardFill } from 'react-icons/ri'
@@ -14,14 +14,13 @@ import { getUser, setUser } from '../slices/userSlicer'
 import { onAuthStateChanged } from 'firebase/auth'
 import Comment from '../components/Comments'
 
-const Video = () => {
+const NonVideo = () => {
   const [videos, setVideos] = useState([])
   const [comments, setComments] = useState([])
   const [data, setData] = useState(null)
   const [comment, setComment] = useState('')
 
   const { id } = useParams()
-  const location = useLocation()
   const dispatch = useDispatch()
   const user = useSelector(getUser)
 
@@ -46,33 +45,6 @@ const Video = () => {
     }
   }, [id])
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        dispatch(setUser(user))
-      } else {
-        dispatch(setUser(null))
-      }
-    })
-  }, [])
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const category = searchParams.get('category')
-    let q = query(collection(db, 'videos'))
-    if (category && category !== 'All') {
-      q = query(collection(db, 'videos'), where('category', '==', category))
-    }
-    const unsubscribe = onSnapshot(q, (snapShot) => {
-      setVideos(
-        snapShot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      )
-    })
-    return unsubscribe
-  }, [location.search])
 
   const addComment = async (e) => {
     e.preventDefault()
@@ -210,50 +182,9 @@ const Video = () => {
             ))}
           </div>
         </div>
-
-        {/* category videos */}
-        <div className='md:w-1/3'>
-          <h2 className='text-white font-medium text-lg mb-3'>
-            Related Videos
-          </h2>
-          <div className='grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4'>
-            {videos
-              .filter((video) => video.id !== id)
-              .map((video) => (
-                <div key={video.id}>
-                  <div className='relative'>
-                    <img
-                      src={video.thumbnail}
-                      alt={video.name}
-                      className='rounded-lg w-full h-[150px] md:h-[200px] object-cover'
-                    />
-                    <div className='absolute bottom-2 right-2 bg-black bg-opacity-50 rounded-lg px-1'>
-                      <p className='text-white text-sm'>{video.duration}</p>
-                    </div>
-                  </div>
-                  <div className='mt-2'>
-                    <h3 className='text-white text-sm font-medium'>
-                      {video.name}
-                    </h3>
-                    <div className='flex items-center mt-1'>
-                      <img
-                        src={video.logo}
-                        alt={video.channel}
-                        className='rounded-full w-5 h-5'
-                      />
-                      <p className='text-white text-sm ml-2'>{video.channel}</p>
-                    </div>
-                    <p className='text-gray text-sm mt-1'>
-                      {video.views} views
-                    </p>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
       </div>
     </>
   )
 }
 
-export default Video
+export default NonVideo

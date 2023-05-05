@@ -1,26 +1,51 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { HiOutlineBars3, HiMagnifyingGlass } from 'react-icons/hi2'
 import { BiVideoPlus } from 'react-icons/bi'
 import { FaRegBell } from 'react-icons/fa'
 import { FaMicrophone } from 'react-icons/fa'
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser, getUser, toggleSidebar, logout } from '../slices/userSlicer'
 
 const Navbar = () => {
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('users'))
+    if (storedUser) {
+      dispatch(setUser(storedUser))
+    }
+  }, [])
   const dispatch = useDispatch()
   const user = useSelector(getUser)
+  const navigate = useNavigate()
+
+  const [showPopup, setShowPopup] = useState(false)
+  const popupRef = useRef(null)
 
   const handleLogin = async () => {
     const response = await signInWithPopup(auth, provider)
     dispatch(setUser(response.user))
+    localStorage.setItem('users', JSON.stringify(response.user))
+    navigate('/home')
+  
   }
 
 
-  // const { state, dispatch } = useContext(stateContext)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowPopup(false)
+      }
+    }
+
+    window.addEventListener('click', handleClickOutside)
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside)
+    }
+  }, [popupRef])
   return (
     <>
       {/* navbar container */}
@@ -35,7 +60,7 @@ const Navbar = () => {
           </div>
           {/* logo */}
           <div className='py-5 w-28'>
-            <Link to={'/'}>
+            <Link to={'/home'}>
               <img src={logo} alt='' />
             </Link>
           </div>
@@ -84,8 +109,7 @@ const Navbar = () => {
           </div>
 
           <div className='max-w-fit pr-2 flex items-center cursor-pointer'>
-            {
-            !user ? (
+            {!user ? (
               <button
                 className='bg-yt_red px-2 py-1 text-white rounded-md font-semibold text-sm'
                 onClick={handleLogin}
@@ -96,10 +120,38 @@ const Navbar = () => {
               <img
                 src={user.photoURL}
                 alt={user.displayName}
+                onClick={() => setShowPopup(true)}
                 className='object-contain rounded-full cursor-pointer w-10 h-10'
+                ref={popupRef}
               />
             )}
 
+            {showPopup && (
+              <div className='absolute right-2 mt-44 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10'>
+                <Link
+                  to='/'
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                >
+                  Your channel
+                </Link>
+                <Link
+                  to='/'
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                >
+                  YouTube Studio
+                </Link>
+                <button
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left'
+                  onClick={() => {
+                    dispatch(logout())
+                    navigate('/')
+                    setShowPopup(false)
+                  }}
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

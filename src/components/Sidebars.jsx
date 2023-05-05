@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
 import { SideBarItems } from '../static/data'
-// import { stateContext } from '../Context'
-// import { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Sidebar = () => {
-  // const { state } = useContext(stateContext)
-  const dispatch = useDispatch()
+
   const showSidebar = useSelector((state) => state.userInfo.showSidebar)  
   const [active, setActive] = useState('Home')
 
@@ -14,7 +11,7 @@ const Sidebar = () => {
     <>
       
         <div
-          className={`scrollbar w-52 bg-black h-[calc(100vh-53px)] mt-14 fixed top-0 left-0 text-white p-3 overflow-scroll nav-menu ${showSidebar ? 'active' : ''}`}
+          className={`scrollbar w-52 bg-black h-[calc(100vh-53px)] mt-14 fixed top-0 left-0 text-white p-3 overflow-scroll z-50 nav-menu ${showSidebar ? 'active' : ''}`}
         >
           {/* topitems */}
           <div className='mb-4 space-y-2'>

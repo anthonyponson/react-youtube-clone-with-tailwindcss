@@ -8,4 +8,4 @@ import userReducer from '../slices/userSlicer'
  export const store = configureStore({
     reducer,
     middleware:(getDefaultMiddleware) => getDefaultMiddleware({serializableCheck:false}),
- })
+ }) 

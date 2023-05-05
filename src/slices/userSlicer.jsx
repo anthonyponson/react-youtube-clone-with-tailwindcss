@@ -3,7 +3,6 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState = {
   user: null,
   showSidebar: true,
-//   isLoggedIn: false,
 };
 
 
@@ -15,11 +14,11 @@ export const userSlice = createSlice({
             state.user = action.payload
         },
         logout:(state,aution) => {
-            state.user = null
+            state.user = localStorage.removeItem('users')
         },
         toggleSidebar: (state, action ) =>{
             state.showSidebar = !state.showSidebar
-        }
+        },
     }
 })
 
