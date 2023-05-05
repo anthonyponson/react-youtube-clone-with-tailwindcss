@@ -1,8 +1,7 @@
 import { addDoc, collection, doc, onSnapshot, query } from 'firebase/firestore'
 import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+import { useParams, useLocation } from 'react-router-dom'
 import { auth, db, timestamp } from '../firebase'
 import { BiLike, BiDislike } from 'react-icons/bi'
 import { RiShareForwardFill } from 'react-icons/ri'
@@ -13,18 +12,26 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUser, setUser } from '../slices/userSlicer'
 import { onAuthStateChanged } from 'firebase/auth'
 import Comment from '../components/Comments'
+import { CategoryItems } from '../static/data'
 
-const NonVideo = () => {
+const Video = () => {
   const [videos, setVideos] = useState([])
   const [comments, setComments] = useState([])
   const [data, setData] = useState(null)
   const [comment, setComment] = useState('')
 
   const { id } = useParams()
+  const location = useLocation()
   const dispatch = useDispatch()
   const user = useSelector(getUser)
 
   const q = query
+
+  const [activeTab, setActiveTab] = useState('All')
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab)
+  }
 
   useEffect(() => {
     if (id) {
@@ -44,7 +51,24 @@ const NonVideo = () => {
       })
     }
   }, [id])
-
+  
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search)
+    const category = searchParams.get('category')
+    let q = query(collection(db, 'videos'))
+    if (category && category !== 'All') {
+      q = query(collection(db, 'videos'), where('category', '==', category))
+    }
+    const unsubscribe = onSnapshot(q, (snapShot) => {
+      setVideos(
+        snapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      )
+    })
+    return unsubscribe
+  }, [location.search])
 
   const addComment = async (e) => {
     e.preventDefault()
@@ -62,7 +86,7 @@ const NonVideo = () => {
 
   return (
     <>
-      <div className='flex flex-col md:flex-row py-10 md:py-20 px-4 md:px-9 bg-black'>
+      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 md:flex-row md:py-20 md:px-9'>
         <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe
@@ -182,9 +206,73 @@ const NonVideo = () => {
             ))}
           </div>
         </div>
+
+        {/* category videos */}
+
+        <div className='md:w-1/4'>
+          <div className='max-w-xs sm:max-w-md'>
+            <div className='space-x-3 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
+              {CategoryItems.map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-3 py-2 font-medium rounded-full text-white transition-colors duration-200 hover:bg-light_1 ${
+                    activeTab === tab
+                      ? 'text-white bg-light_black'
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => handleTabClick(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <h2 className='text-white font-medium text-lg mb-3'>
+            Related Videos
+          </h2>
+          <div className='video-container'>
+            <div className='grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4'>
+              {videos
+                .filter((video) => video.id !== id)
+                .map((video) => (
+                  <div key={video.id}>
+                    <div className='relative'>
+                      <img
+                        src={video.thumbnail}
+                        alt={video.name}
+                        className='rounded-lg w-full h-[150px] md:h-[200px] object-cover'
+                      />
+                      <div className='absolute bottom-2 right-2 bg-black bg-opacity-50 rounded-lg px-1'>
+                        <p className='text-white text-sm'>{video.duration}</p>
+                      </div>
+                    </div>
+                    <div className='mt-2'>
+                      <h3 className='text-white text-sm font-medium'>
+                        {video.name}
+                      </h3>
+                      <div className='flex items-center mt-1'>
+                        <img
+                          src={video.logo}
+                          alt={video.channel}
+                          className='rounded-full w-5 h-5'
+                        />
+                        <p className='text-white text-sm ml-2'>
+                          {video.channel}
+                        </p>
+                      </div>
+                      <p className='text-gray text-sm mt-1'>
+                        {video.views} views
+                      </p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )
 }
 
-export default NonVideo
+export default Video

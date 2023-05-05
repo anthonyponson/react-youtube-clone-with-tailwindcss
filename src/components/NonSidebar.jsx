@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { nonUserSideBarItems } from '../static/data'
 import { useDispatch, useSelector } from 'react-redux'
 
-const User = () => {
+const NonSidebar = () => {
   const showSidebar = useSelector((state) => state.userInfo.showSidebar)
   const [active, setActive] = useState('Home')
 
@@ -15,10 +15,10 @@ const User = () => {
       >
         {/* topitems */}
         <div className='mb-4 space-y-2'>
-          {nonUserSideBarItems.Top.map((item, index) => {
+          {nonUserSideBarItems.Top.map((item, i) => {
             return (
               <div
-                key={index}
+                key={i}
                 className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 ${
                          item.name === active ? 'bg-light_black' : 'bg-black'
@@ -36,10 +36,10 @@ const User = () => {
         {/* middleitems */}
 
         <div className='mb-4 space-y-2'>
-          {nonUserSideBarItems.Middle.map((item, index) => {
+          {nonUserSideBarItems.Middle.map((item, i) => {
             return (
               <div
-                key={index}
+                key={i}
                 className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 
                        ${item.name === active ? 'bg-light_black' : 'bg-black'}`}
@@ -54,19 +54,20 @@ const User = () => {
         <hr className='text-light_black my-2' />
 
         <div className='mb-4 space-y-2'>
-          {nonUserSideBarItems.SignIn.map((item, index) => {
+          {nonUserSideBarItems.SignIn.map((item, i) => {
             return (
-              <>
-              <h3 className='text-sm font-semibold mx-2 pb-2'>sign in to subscribe and like , comment</h3>
-               <div
-                key={index}
-                className={`h-10 w-32 space-x-4 flex justify-start items-center py-4 px-4 rounded-full border border-slate-100 cursor-pointer hover:bg-light_black my-1 ${item.iocn === active ? 'bg-light_black' : 'bg-black'}`} onClick={() => setActive(item.iocn)}
-              >
-                <span className=''>{item.icon}</span>
-                <p className=''>{item.name}</p>
+              <div key={i} className=''>
+                <h3 className="text-white text-sm px-2 pb-3">sign in to like comment subsribe</h3>
+                <div
+                  className={`h-10 w-32 space-x-4 flex justify-start items-center py-4 px-4 rounded-full border border-slate-100 cursor-pointer hover:bg-light_black my-1 ${
+                    item.iocn === active ? 'bg-light_black' : 'bg-black'
+                  }`}
+                  onClick={() => setActive(item.iocn)}
+                >
+                  <span className=''>{item.icon}</span>
+                  <p className=''>{item.name}</p>
+                </div>
               </div>
-              </>
-             
             )
           })}
         </div>
@@ -76,10 +77,10 @@ const User = () => {
 
         <div className='mb-4 space-y-2'>
           <h2 className=''>Explore</h2>
-          {nonUserSideBarItems.Bottom.map((item, index) => {
+          {nonUserSideBarItems.Bottom.map((item, i) => {
             return (
               <div
-                key={index}
+                key={i}
                 className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 
                        ${item.name === active ? 'bg-light_black' : 'bg-black'}`}
@@ -97,4 +98,4 @@ const User = () => {
   )
 }
 
-export default User
+export default NonSidebar

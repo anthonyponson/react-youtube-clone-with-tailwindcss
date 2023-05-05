@@ -29,10 +29,7 @@ const Home = () => {
   useEffect(() => {
     let q = query(collection(db, 'videos'))
     if (selectedCategory !== 'All') {
-      q = query(
-        collection(db, 'videos'),
-        where('category', '==', selectedCategory)
-      )
+      q = query(collection(db, 'videos'), where('category', '==', selectedCategory))
     }
     const unsubscribe = onSnapshot(q, (snapShot) => {
       setVideos(
@@ -66,18 +63,15 @@ const Home = () => {
       <div className='ml-[0] md:ml-[19%] mx-auto bg-pitch_black pt-16'>
         <div className='flex flex-row items-center space-x-2 overflow-x-scroll relative scrollbar-hide'>
           {CategoryItems.map((item, index) => (
-            <Link
-              to={`/?category=${item}`}
+            <button
               className={`scrollbar text-white px-2 py-1 whitespace-nowrap break-keep rounded-lg ${
-                selectedCategory === item
-                  ? 'bg-light_black_1'
-                  : 'bg-dark_black_1'
+                selectedCategory === item ? 'bg-light_black_1' : 'bg-dark_black_1'
               }`}
               key={index}
               onClick={() => handleCategoryClick(item)}
             >
               {item}
-            </Link>
+            </button>
           ))}
         </div>
         <div className='pt-12 px-5 flex flex-col gap-x-3 gap-y-8 smd:flex-row smd:flex-wrap'>
@@ -85,21 +79,13 @@ const Home = () => {
             <div className='h-[86vh]'></div>
           ) : (
             videos.map((video, index) => (
-              <Link
-                to={`/?category=${item}`}
-                className={`scrollbar text-white px-2 py-1 whitespace-nowrap break-keep rounded-lg ${
-                  selectedCategory === item
-                    ? 'bg-light_black_1'
-                    : 'bg-dark_black_1'
-                }`}
-                key={index}
-                onClick={() => handleCategoryClick(item)}
-              >
-                {item}
+              <Link to={`/video/${video.id}`} key={index}>
+                <Video {...video} />
               </Link>
             ))
           )}
         </div>
+
       </div>
     </>
   )
