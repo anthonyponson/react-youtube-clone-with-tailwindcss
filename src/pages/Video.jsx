@@ -21,7 +21,7 @@ const Video = () => {
   const [comments, setComments] = useState([])
   const [data, setData] = useState(null)
   const [comment, setComment] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   const { id } = useParams()
   const location = useLocation()
@@ -47,6 +47,7 @@ const Video = () => {
     localStorage.setItem('count', count)
     localStorage.setItem('discount', discount)
   }, [count, discount])
+
   const q = query
 
   const handleCategoryClick = (category) => {
@@ -54,10 +55,27 @@ const Video = () => {
   }
 
   const filteredVideos =
-    selectedCategory === 'All'
-      ? videos
-      : videos.filter((video) => video.category === selectedCategory)
+    selectedCategory !== null
+      ? videos.filter((video) => video.category === selectedCategory)
+      : videos.filter((video) => video.id === id || video.category === data?.category)
 
+
+  // useEffect to fetch video details from database
+  useEffect(() => {
+    let q = query(collection(db, 'videos'))
+
+    const unsubscribe = onSnapshot(q, (snapShot) => {
+      setVideos(
+        snapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      )
+    })
+    return unsubscribe
+  }, [])
+
+  // useEffect to fetch video details for the selected video
   useEffect(() => {
     if (id) {
       const q = query(doc(db, 'videos', id))
@@ -77,6 +95,7 @@ const Video = () => {
     }
   }, [id])
 
+  // prevent user logout after logged in
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -87,28 +106,7 @@ const Video = () => {
     })
   }, [])
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const category = searchParams.get('category')
-    let q = query(collection(db, 'videos'))
-    if (category && category !== 'All') {
-      q = query(
-        collection(db, 'videos'),
-        where('category', 'array-contains', category)
-      )
-      setSelectedCategory(category)
-    }
-    const unsubscribe = onSnapshot(q, (snapShot) => {
-      setVideos(
-        snapShot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      )
-    })
-    return unsubscribe
-  }, [location.search, setSelectedCategory, db, selectedCategory])
-
+  // add comment to database
   const addComment = async (e) => {
     e.preventDefault()
     const commentData = {
@@ -126,7 +124,7 @@ const Video = () => {
   return (
     <>
       <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 md:flex-row md:py-20 md:px-9'>
-        <div className='md:flex-1'>
+      <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe
               className='w-full h-[300px] md:h-[550px] rounded-lg'
@@ -254,10 +252,10 @@ const Video = () => {
           </div>
         </div>
 
-        {/* category videos */}
+    {/* recommended videos */}
+    <div className='md:w-1/3'>
 
-        <div className='md:w-1/4'>
-          <div className='max-w-xs sm:max-w-md'>
+    <div className='max-w-xs sm:max-w-md'>
             <div className='space-x-3 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
               {CategoryItems.map((item) => (
                 <button
@@ -275,51 +273,30 @@ const Video = () => {
             </div>
           </div>
 
-          <h2 className='text-white font-medium text-lg mb-3'>
-            Related Videos
-          </h2>
-          <div className='video-container'>
-            <div className='grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4'>
-              {filteredVideos
-                .filter((video) => video.id !== id)
-                .map((video) => (
-                  <div key={video.id}>
-                    <div className='relative'>
-                      <img
-                        src={video.thumbnail}
-                        alt={video.name}
-                        className='rounded-lg w-full h-[150px] md:h-[200px] object-cover'
-                      />
-                      <div className='absolute bottom-2 right-2 bg-black bg-opacity-50 rounded-lg px-1'>
-                        <p className='text-white text-sm'>{video.duration}</p>
-                      </div>
-                    </div>
-                    <div className='mt-2'>
-                      <h3 className='text-white text-sm font-medium'>
-                        {video.name}
-                      </h3>
-                      <div className='flex items-center mt-1'>
-                        <img
-                          src={video.logo}
-                          alt={video.channel}
-                          className='rounded-full w-5 h-5'
-                        />
-                        <p className='text-white text-sm ml-2'>
-                          {video.channel}
-                        </p>
-                      </div>
-                      <p className='text-gray text-sm mt-1'>
-                        {video.views} views
-                      </p>
-                    </div>
-                  </div>
-                ))}
+      <div className='space-y-4'>
+        {filteredVideos.map((video) => (
+          <Link key={video.id} to={`/video/${video.id}`}>
+            <div className='flex space-x-4'>
+              <img
+                src={video.thumbnail}
+                alt={video.name}
+                className='w-36 h-20 md:w-48 md:h-28 object-cover rounded-lg'
+              />
+              <div className='flex flex-col'>
+                <h3 className='text-white font-medium text-base'>
+                  {video.name}
+                </h3>
+                <p className='text-gray-400 text-sm'>
+                  {video.channel} • {video.views} views • {video.uploaded}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
+          </Link>
+        ))}
       </div>
-    </>
-  )
-}
+    </div>
+  </div>
+</>
+) }
 
 export default Video
