@@ -44,3 +44,27 @@ body {
   white-space: normal;
 }
 
+/* Change the color of the controls */
+.plyr--controls button.plyr__control {
+  color: #ffffff; /* Change to your desired color */
+}
+
+/* Change the background color of the controls */
+.plyr--controls {
+  background-color: #000000 !important; /* Change to your desired color */
+}
+
+/* Change the color of the progress bar */
+.plyr--progress input[type="range"] {
+  background-color: #ffffff; /* Change to your desired color */
+}
+
+/* Change the color of the captions */
+.plyr__caption {
+  color: #ffffff; /* Change to your desired color */
+}
+
+/* Change the background color of the captions */
+.plyr__caption {
+  background-color: #000000; /* Change to your desired color */
+}

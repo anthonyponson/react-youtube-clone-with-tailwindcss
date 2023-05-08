@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { nonUserSideBarItems } from '../static/data'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
 
 const NonSidebar = () => {
   const showSidebar = useSelector((state) => state.userInfo.showSidebar)
@@ -15,19 +17,20 @@ const NonSidebar = () => {
       >
         {/* topitems */}
         <div className='mb-4 space-y-2'>
-          {nonUserSideBarItems.Top.map((item, i) => {
+        {nonUserSideBarItems.Top.map((item, i) => {
             return (
-              <div
-                key={i}
-                className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
+              <Link key={i} to={item.path}>
+                <div
+                  className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 ${
-                         item.name === active ? 'bg-light_black' : 'bg-black'
-                       }`}
-                onClick={() => setActive(item.name)}
-              >
-                <span className=''>{item.icon}</span>
-                <p className=''>{item.name}</p>
-              </div>
+                    item.name === active ? 'bg-light_black' : 'bg-black'
+                  }`}
+                  onClick={() => setActive(item.name)}
+                >
+                  <span className=''>{item.icon}</span>
+                  <p className=''>{item.name}</p>
+                </div>
+              </Link>
             )
           })}
         </div>
@@ -38,16 +41,17 @@ const NonSidebar = () => {
         <div className='mb-4 space-y-2'>
           {nonUserSideBarItems.Middle.map((item, i) => {
             return (
-              <div
-                key={i}
-                className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
+              <Link key={i} to={item.path}>
+                <div
+                  className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 
                        ${item.name === active ? 'bg-light_black' : 'bg-black'}`}
-                onClick={() => setActive(item.name)}
-              >
-                <span className=''>{item.icon}</span>
-                <p className=''>{item.name}</p>
-              </div>
+                  onClick={() => setActive(item.name)}
+                >
+                  <span className=''>{item.icon}</span>
+                  <p className=''>{item.name}</p>
+                </div>
+              </Link>
             )
           })}
         </div>
@@ -56,43 +60,45 @@ const NonSidebar = () => {
         <div className='mb-4 space-y-2'>
           {nonUserSideBarItems.SignIn.map((item, i) => {
             return (
-              <div key={i} className=''>
-                <h3 className="text-white text-sm px-2 pb-3">sign in to like comment subsribe</h3>
-                <div
-                  className={`h-10 w-32 space-x-4 flex justify-start items-center py-4 px-4 rounded-full border border-slate-100 cursor-pointer hover:bg-light_black my-1 ${
-                    item.iocn === active ? 'bg-light_black' : 'bg-black'
-                  }`}
-                  onClick={() => setActive(item.iocn)}
-                >
-                  <span className=''>{item.icon}</span>
-                  <p className=''>{item.name}</p>
+              <Link key={i} to={item.path}>
+                <div>
+                  <h3 className="text-white text-sm px-2 pb-3">sign in to like comment subscribe</h3>
+                  <div
+                    className={`h-10 w-32 space-x-4 flex justify-start items-center py-4 px-4 rounded-full border border-slate-100 cursor-pointer hover:bg-light_black my-1 ${
+                      item.iocn === active ? 'bg-light_black' : 'bg-black'
+                    }`}
+                    onClick={() => setActive(item.iocn)}
+                  >
+                    <span className=''>{item.icon}</span>
+                    <p className=''>{item.name}</p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>
         <hr className='text-light_black my-2' />
 
-        {/* bottom items */}
-
         <div className='mb-4 space-y-2'>
-          <h2 className=''>Explore</h2>
-          {nonUserSideBarItems.Bottom.map((item, i) => {
+          Explore
+        {nonUserSideBarItems.Bottom.map((item, i) => {
             return (
-              <div
-                key={i}
-                className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
-                       cursor-pointer hover:bg-light_black my-1 
-                       ${item.name === active ? 'bg-light_black' : 'bg-black'}`}
-                onClick={() => setActive(item.name)}
-              >
-                <span className=''>{item.icon}</span>
-                <p className=''>{item.name}</p>
-              </div>
+              <Link key={i} to={item.path}>
+                <div
+                  className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
+                       cursor-pointer hover:bg-light_black my-1 ${
+                    item.name === active ? 'bg-light_black' : 'bg-black'
+                  }`}
+                  onClick={() => setActive(item.name)}
+                >
+                  <span className=''>{item.icon}</span>
+                  <p className=''>{item.name}</p>
+                </div>
+              </Link>
             )
           })}
         </div>
-        {/* <hr className='text-light_black my-2' /> */}
+        <hr className='text-light_black my-2' />
       </div>
     </>
   )

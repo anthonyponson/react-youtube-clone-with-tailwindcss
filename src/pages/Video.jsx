@@ -14,6 +14,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import Comment from '../components/Comments'
 import { CategoryItems } from '../static/data'
 import { Link } from 'react-router-dom'
+import Sidebar from '../components/SideBars'
 
 const Video = () => {
   const [videos, setVideos] = useState([])
@@ -22,6 +23,7 @@ const Video = () => {
   const [data, setData] = useState(null)
   const [comment, setComment] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [showAllVideos, setShowAllVideos] = useState(false)
 
   const { id } = useParams()
   const location = useLocation()
@@ -52,13 +54,21 @@ const Video = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
+    if (category === 'All') {
+      setShowAllVideos(true)
+    } else {
+      setShowAllVideos(false)
+    }
   }
 
   const filteredVideos =
-    selectedCategory !== null
+    showAllVideos === true
+      ? videos
+      : selectedCategory !== null
       ? videos.filter((video) => video.category === selectedCategory)
-      : videos.filter((video) => video.id === id || video.category === data?.category)
-
+      : videos.filter(
+          (video) => video.id === id || video.category === data?.category
+        )
 
   // useEffect to fetch video details from database
   useEffect(() => {
@@ -123,11 +133,12 @@ const Video = () => {
 
   return (
     <>
-      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 md:flex-row md:py-20 md:px-9'>
-      <div className='md:flex-1'>
+      <Sidebar />
+      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 lg:flex-row md:py-20 md:px-9'>
+        <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe
-              className='w-full h-[300px] md:h-[550px] rounded-lg'
+              className='w-full h-[300px] md:h-[550px] rounded-lg object-contain'
               src={`https://www.youtube.com/embed/${data?.link}`}
               title='YouTube video player'
               frameBorder='0'
@@ -135,6 +146,7 @@ const Video = () => {
               allowFullScreen
             ></iframe>
           </div>
+       
           <h2 className='text-white mt-3 mb-1 font-medium text-lg'>
             {data?.name}
           </h2>
@@ -161,7 +173,10 @@ const Video = () => {
               </div>
 
               <div className='flex ml-auto md:ml-6'>
-                <button className='text-black bg-white px-2 py-1 rounded-full font-semibold text-sm'>
+                <button
+                  className='text-black bg-white px-2 py-1 rounded-full font-semibold 
+                text-sm'
+                >
                   Subscribe
                 </button>
               </div>
@@ -179,7 +194,7 @@ const Video = () => {
                   <p className='text-white pl-2 pr-3 text-sm'>{count}</p>
                 </div>
 
-                <div className='cursor-pointer pl-4 pr-5'>
+                <div className='flex cursor-pointer pl-4 pr-5'>
                   <BiDislike
                     className='text-2xl font-extralight text-white'
                     onClick={handleDisLikeClick}
@@ -211,7 +226,7 @@ const Video = () => {
           </div>
 
           <div className='max-w-4xl bg-light_black mt-4 rounded-2xl px-4 py-2 text-sm'>
-            <div className='flex p-2 space-x-2'>
+            <div className='flex space-x-2 pb-2'>
               <p className='font-medium text-white'>{data?.views} views</p>
               <p className='font-medium text-gray'>{data?.uploadTime}</p>
             </div>
@@ -252,10 +267,9 @@ const Video = () => {
           </div>
         </div>
 
-    {/* recommended videos */}
-    <div className='md:w-1/3'>
-
-    <div className='max-w-xs sm:max-w-md'>
+        {/* recommended videos */}
+        <div className='md:w-1/3'>
+          <div className='max-w-xs sm:max-w-md'>
             <div className='space-x-3 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
               {CategoryItems.map((item) => (
                 <button
@@ -273,30 +287,32 @@ const Video = () => {
             </div>
           </div>
 
-      <div className='space-y-4'>
-        {filteredVideos.map((video) => (
-          <Link key={video.id} to={`/video/${video.id}`}>
-            <div className='flex space-x-4'>
-              <img
-                src={video.thumbnail}
-                alt={video.name}
-                className='w-36 h-20 md:w-48 md:h-28 object-cover rounded-lg'
-              />
-              <div className='flex flex-col'>
-                <h3 className='text-white font-medium text-base'>
-                  {video.name}
-                </h3>
-                <p className='text-gray-400 text-sm'>
-                  {video.channel} • {video.views} views • {video.uploaded}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+          <div className='space-x-4 pt-6'>
+            {filteredVideos.map((video) => (
+              <Link key={video.id} to={`/video/${video.id}`}>
+                <div className='flex space-x-4'>
+                  <img
+                    src={video.thumbnail}
+                    alt={video.name}
+                    className='w-36 h-20 md:w-48 md:h-28 object-cover rounded-lg'
+                  />
+                  <div className='flex flex-col'>
+                    <h3 className='text-white font-medium text-base video-title'>
+                      {video.name}
+                    </h3>
+                    <p className='text-gray text-sm'>
+                      {video.channel} <br /> {video.views} views <br />{' '}
+                      {video.uploadTime}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</>
-) }
+    </>
+  )
+}
 
 export default Video

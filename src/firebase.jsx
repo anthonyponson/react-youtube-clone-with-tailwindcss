@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 
 import {getAuth,GoogleAuthProvider} from 'firebase/auth'
 import {getFirestore, serverTimestamp} from 'firebase/firestore'
+import {getStorage} from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBNk9_u92r0vffL8L1WGxBliTLXpP-tbpM",

@@ -13,26 +13,77 @@ import { getUser, setUser } from '../slices/userSlicer'
 import { onAuthStateChanged } from 'firebase/auth'
 import Comment from '../components/Comments'
 import { CategoryItems } from '../static/data'
+import { Link } from 'react-router-dom'
+import NonSidebar from '../components/NonSidebar'
 
 const Video = () => {
   const [videos, setVideos] = useState([])
+
   const [comments, setComments] = useState([])
   const [data, setData] = useState(null)
   const [comment, setComment] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [showAllVideos, setShowAllVideos] = useState(false)
 
   const { id } = useParams()
   const location = useLocation()
   const dispatch = useDispatch()
   const user = useSelector(getUser)
 
-  const q = query
+  const [count, setCount] = useState(
+    parseInt(localStorage.getItem('count')) || 34
+  )
+  const [discount, setDiscount] = useState(
+    parseInt(localStorage.getItem('discount')) || 0
+  )
 
-  const [activeTab, setActiveTab] = useState('All')
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab)
+  const handleLikeClick = () => {
+    setCount(count + 1)
   }
 
+  const handleDisLikeClick = () => {
+    setDiscount(discount + 1)
+  }
+
+  useEffect(() => {
+    localStorage.setItem('count', count)
+    localStorage.setItem('discount', discount)
+  }, [count, discount])
+
+  const q = query
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category)
+    if (category === 'All') {
+      setShowAllVideos(true)
+    } else {
+      setShowAllVideos(false)
+    }
+  }
+
+  const filteredVideos =
+    showAllVideos === true ? videos : selectedCategory !== null ? videos.filter((video) => video.category === selectedCategory)
+      : videos.filter(
+          (video) => video.id === id || video.category === data?.category
+        )
+
+
+  // useEffect to fetch video details from database
+  useEffect(() => {
+    let q = query(collection(db, 'videos'))
+
+    const unsubscribe = onSnapshot(q, (snapShot) => {
+      setVideos(
+        snapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      )
+    })
+    return unsubscribe
+  }, [])
+
+  // useEffect to fetch video details for the selected video
   useEffect(() => {
     if (id) {
       const q = query(doc(db, 'videos', id))
@@ -51,25 +102,9 @@ const Video = () => {
       })
     }
   }, [id])
-  
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const category = searchParams.get('category')
-    let q = query(collection(db, 'videos'))
-    if (category && category !== 'All') {
-      q = query(collection(db, 'videos'), where('category', '==', category))
-    }
-    const unsubscribe = onSnapshot(q, (snapShot) => {
-      setVideos(
-        snapShot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      )
-    })
-    return unsubscribe
-  }, [location.search])
 
+
+  // add comment to database
   const addComment = async (e) => {
     e.preventDefault()
     const commentData = {
@@ -86,11 +121,12 @@ const Video = () => {
 
   return (
     <>
-      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 md:flex-row md:py-20 md:px-9'>
+    <NonSidebar />
+      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 lg:flex-row md:py-20 md:px-9'>
         <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe
-              className='w-full h-[300px] md:h-[550px] rounded-lg'
+              className='w-full h-[300px] md:h-[550px] rounded-lg object-contain'
               src={`https://www.youtube.com/embed/${data?.link}`}
               title='YouTube video player'
               frameBorder='0'
@@ -124,7 +160,8 @@ const Video = () => {
               </div>
 
               <div className='flex ml-auto md:ml-6'>
-                <button className='text-black bg-white px-2 py-1 rounded-full font-semibold text-sm'>
+                <button className='text-black bg-white px-2 py-1 rounded-full font-semibold 
+                text-sm'>
                   Subscribe
                 </button>
               </div>
@@ -134,12 +171,20 @@ const Video = () => {
             <div className='flex items-center mt-2 flex-wrap'>
               <div className='flex bg-light_black items-center rounded-full h-10 mx-1 hover:bg-light_1'>
                 <div className='flex px-3 items-center border-r-2 border-r-light_black_1 cursor-pointer'>
-                  <BiLike type='button' className='text-white text-2xl' />
-                  <p className='text-white pl-2 pr-3 text-sm'>8K</p>
+                  <BiLike
+                    type='button'
+                    className='text-white text-2xl'
+                    onClick={handleLikeClick}
+                  />
+                  <p className='text-white pl-2 pr-3 text-sm'>{count}</p>
                 </div>
 
-                <div className='cursor-pointer pl-4 pr-5'>
-                  <BiDislike className='text-2xl font-extralight text-white' />
+                <div className='flex cursor-pointer pl-4 pr-5'>
+                  <BiDislike
+                    className='text-2xl font-extralight text-white'
+                    onClick={handleDisLikeClick}
+                  />
+                  <p className='text-white pl-2 pr-3 text-sm'>{discount}</p>
                 </div>
               </div>
 
@@ -147,7 +192,7 @@ const Video = () => {
                 <div className='flex items-center cursor-pointer py-5 px-2'></div>
                 <RiShareForwardFill className='text-white' />
                 <p className='text-white pl-2 pr-3 text-sm font-semibold'>
-                  Thanks
+                  share
                 </p>
               </div>
 
@@ -166,7 +211,7 @@ const Video = () => {
           </div>
 
           <div className='max-w-4xl bg-light_black mt-4 rounded-2xl px-4 py-2 text-sm'>
-            <div className='flex p-2 space-x-2'>
+            <div className='flex space-x-2 pb-2'>
               <p className='font-medium text-white'>{data?.views} views</p>
               <p className='font-medium text-gray'>{data?.uploadTime}</p>
             </div>
@@ -207,67 +252,47 @@ const Video = () => {
           </div>
         </div>
 
-        {/* category videos */}
-
-        <div className='md:w-1/4'>
+        {/* recommended videos */}
+        <div className='md:w-1/3'>
           <div className='max-w-xs sm:max-w-md'>
             <div className='space-x-3 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
-              {CategoryItems.map((tab) => (
+              {CategoryItems.map((item) => (
                 <button
-                  key={tab}
-                  className={`px-3 py-2 font-medium rounded-full text-white transition-colors duration-200 hover:bg-light_1 ${
-                    activeTab === tab
-                      ? 'text-white bg-light_black'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                  className={`text-white px-2 py-1 whitespace-nowrap break-keep rounded-lg ${
+                    selectedCategory === item
+                      ? 'bg-light_black_1'
+                      : 'bg-dark_black_1'
                   }`}
-                  onClick={() => handleTabClick(tab)}
+                  key={item}
+                  onClick={() => handleCategoryClick(item)}
                 >
-                  {tab}
+                  {item}
                 </button>
               ))}
             </div>
           </div>
 
-          <h2 className='text-white font-medium text-lg mb-3'>
-            Related Videos
-          </h2>
-          <div className='video-container'>
-            <div className='grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4'>
-              {videos
-                .filter((video) => video.id !== id)
-                .map((video) => (
-                  <div key={video.id}>
-                    <div className='relative'>
-                      <img
-                        src={video.thumbnail}
-                        alt={video.name}
-                        className='rounded-lg w-full h-[150px] md:h-[200px] object-cover'
-                      />
-                      <div className='absolute bottom-2 right-2 bg-black bg-opacity-50 rounded-lg px-1'>
-                        <p className='text-white text-sm'>{video.duration}</p>
-                      </div>
-                    </div>
-                    <div className='mt-2'>
-                      <h3 className='text-white text-sm font-medium'>
-                        {video.name}
-                      </h3>
-                      <div className='flex items-center mt-1'>
-                        <img
-                          src={video.logo}
-                          alt={video.channel}
-                          className='rounded-full w-5 h-5'
-                        />
-                        <p className='text-white text-sm ml-2'>
-                          {video.channel}
-                        </p>
-                      </div>
-                      <p className='text-gray text-sm mt-1'>
-                        {video.views} views
-                      </p>
-                    </div>
+          <div className='space-x-4 pt-6'>
+
+            {filteredVideos.map((video) => (
+              <Link key={video.id} to={`/video/${video.id}`}>
+                <div className='flex space-x-4'>
+                  <img
+                    src={video.thumbnail}
+                    alt={video.name}
+                    className='w-36 h-20 md:w-48 md:h-28 object-cover rounded-lg'
+                  />
+                  <div className='flex flex-col'>
+                    <h3 className='text-white font-medium text-base'>
+                      {video.name}
+                    </h3>
+                    <p className='text-gray text-sm'>
+                      {video.channel}  <br /> {video.views} views <br /> {video.uploadTime}
+                    </p>
                   </div>
-                ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

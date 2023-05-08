@@ -14,6 +14,7 @@ import { GiDress } from 'react-icons/gi'
 import { HiSignal } from 'react-icons/hi2'
 import { AiOutlineProfile } from 'react-icons/ai'
 import { FaUser } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 
 export const SideBarItems = {
   Top: [
@@ -48,7 +49,7 @@ export const nonUserSideBarItems = {
     { icon: <MdOutlineSubscriptions size={21} />, name: 'Subscriptions' },
   ],
   Middle: [
-    { icon: <MdVideoLibrary size={21} />, name: 'Library' },
+    { icon: <MdVideoLibrary size={21} />, name: 'Library', path: '/favorites' },
     { icon: <VscHistory size={21} />, name: 'History' },
   ],
 

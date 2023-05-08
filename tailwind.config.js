@@ -25,6 +25,7 @@ export default {
         sm: '400px',
         xsm: '420px',
         smd: '620px',
+        xmd:'991px'
       }
     },
   },
