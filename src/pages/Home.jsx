@@ -9,6 +9,7 @@ import Video from '../components/Video'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../slices/userSlicer'
+import { storageVideos } from '../storageVideo'
 
 const Home = () => {
   const [videos, setVideos] = useState([])
@@ -29,7 +30,10 @@ const Home = () => {
   useEffect(() => {
     let q = query(collection(db, 'videos'))
     if (selectedCategory !== 'All') {
-      q = query(collection(db, 'videos'), where('category', '==', selectedCategory))
+      q = query(
+        collection(db, 'videos'),
+        where('category', '==', selectedCategory)
+      )
     }
     const unsubscribe = onSnapshot(q, (snapShot) => {
       setVideos(
@@ -65,7 +69,9 @@ const Home = () => {
           {CategoryItems.map((item, index) => (
             <button
               className={`scrollbar text-white px-2 py-1 whitespace-nowrap break-keep rounded-lg ${
-                selectedCategory === item ? 'bg-light_black_1' : 'bg-dark_black_1'
+                selectedCategory === item
+                  ? 'bg-light_black_1'
+                  : 'bg-dark_black_1'
               }`}
               key={index}
               onClick={() => handleCategoryClick(item)}
@@ -84,8 +90,8 @@ const Home = () => {
               </Link>
             ))
           )}
+         
         </div>
-
       </div>
     </>
   )

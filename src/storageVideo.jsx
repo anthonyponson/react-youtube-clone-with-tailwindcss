@@ -4,7 +4,8 @@ export const storageVideos = [
         id: Date.now().toString(),
         url:"https://firebasestorage.googleapis.com/v0/b/clone-c6054.appspot.com/o/Naruto%20Ep%20Episode%201%20-%20Chia-Anime.mp4?alt=media&token=e9dd3547-0182-407c-8ad5-77d58e9f80bd",
         name:'naruto 1',
-        thumbnail:'https://i.ytimg.com/vi/cwnPZ8HOV10/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD2j0cfjXgTaX9Ju6pIenq1_POq2Q'
+        thumbnail:'https://i.ytimg.com/vi/cwnPZ8HOV10/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD2j0cfjXgTaX9Ju6pIenq1_POq2Q',
+        category:'c4etech',
     },
 
     {

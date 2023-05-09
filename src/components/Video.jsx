@@ -1,6 +1,8 @@
 import React from 'react'
 import check from '../assets/check.png'
 import { HiCheckCircle } from 'react-icons/hi'
+import { storageVideos } from '../storageVideo'
+import { Link } from 'react-router-dom'
 
 const Video = ({
   thumbnail,
@@ -15,6 +17,7 @@ const Video = ({
   return (
     <>
       <div className='flex flex-col space-y-1 max-w-[260px] cursor-pointer'>
+        
         <div className='relative w-full'>
           <img
             src={thumbnail}
@@ -24,6 +27,7 @@ const Video = ({
           <p className='absolute right-2 top-[85%] px-1 text-xs bg-black text-white rounded'>
             {duration}
           </p>
+          
         </div>
         <div className='flex mt-3 space-x-4'>
           <img src={logo} alt='' className='h-8 w-8 rounded-full' />
@@ -40,9 +44,13 @@ const Video = ({
                 style={{ width: '14px', height: '14px' }}
               />
             </h3>
-            <p className="text-gray text-sm">{views} views . {uploadTime}</p>
+            <p className='text-gray text-sm'>
+              {views} views . {uploadTime}
+            </p>
           </div>
         </div>
+
+       
       </div>
     </>
   )

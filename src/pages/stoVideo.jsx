@@ -34,7 +34,7 @@ function StoVideo() {
 
   return (
     <div className='pt-36 text-white'>
-      <video id='player'>
+      <video color='red' id='player'>
         <source src={video.url} type='video/mp4' />
       </video>
     </div>
