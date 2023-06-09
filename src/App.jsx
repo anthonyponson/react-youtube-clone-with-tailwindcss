@@ -10,8 +10,8 @@ import { useEffect } from 'react'
 import { auth } from './firebase'
 import NonVideo from './pages/NonVideo'
 import NonFav from './pages/NonFav'
-import Storage from './pages/storage'
-import StoVideo from './pages/StoVideo'
+// import Storage from './pages/storage'
+// import StoVideo from './pages/StoVideo'
 
 function App() {
   const user = useSelector((state) => state.userInfo.user)
@@ -34,14 +34,14 @@ function App() {
           <>
             <Route path='/' element={<Home />} />
             <Route path='/video/:id' element={<Video />} />
-            <Route path='/storage' element={<Storage />} />
-            <Route path='/storage/:id' element={<StoVideo />} />
+            {/* <Route path='/storage' element={<Storage />} /> */}
+            {/* <Route path='/storage/:id' element={<StoVideo />} /> */}
             <Route path='*' element={<Navigate to={'/'}></Navigate>} />
           </>
         ) : (
           <>
             <Route path='/' element={<NonHome />} />
-            <Route path='/nonvideo/:id' element={<NonVideo />} />
+            <Route path='/nonvideo/:id' element={<NonVideo />}/>
             <Route path='/favorites' element={<NonFav />} />
           </>
         )}

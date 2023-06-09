@@ -5,11 +5,11 @@ import { CategoryItems } from '../static/data'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 import { Link, useLocation } from 'react-router-dom'
-import Video from '../components/Video'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../slices/userSlicer'
 import NonSidebar from '../components/NonSidebar'
+import Video from '../components/Video'
 
 const Home = () => {
   const [videos, setVideos] = useState([])
@@ -72,7 +72,7 @@ const Home = () => {
             <div className='h-[86vh]'></div>
           ) : (
             videos.map((video, index) => (
-              <Link to={`/video/${video.id}`} key={index}>
+              <Link to={`/nonvideo/${video.id}`} key={index}>
                 <Video {...video} />
               </Link>
             ))

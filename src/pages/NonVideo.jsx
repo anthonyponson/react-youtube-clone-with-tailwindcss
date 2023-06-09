@@ -14,9 +14,9 @@ import { onAuthStateChanged } from 'firebase/auth'
 import Comment from '../components/Comments'
 import { CategoryItems } from '../static/data'
 import { Link } from 'react-router-dom'
-import NonSidebar from '../components/NonSidebar'
+import Sidebar from '../components/SideBars'
 
-const Video = () => {
+const NonVideo = () => {
   const [videos, setVideos] = useState([])
 
   const [comments, setComments] = useState([])
@@ -62,11 +62,13 @@ const Video = () => {
   }
 
   const filteredVideos =
-    showAllVideos === true ? videos : selectedCategory !== null ? videos.filter((video) => video.category === selectedCategory)
+    showAllVideos === true
+      ? videos
+      : selectedCategory !== null
+      ? videos.filter((video) => video.category === selectedCategory)
       : videos.filter(
           (video) => video.id === id || video.category === data?.category
         )
-
 
   // useEffect to fetch video details from database
   useEffect(() => {
@@ -121,7 +123,7 @@ const Video = () => {
 
   return (
     <>
-    <NonSidebar />
+      <Sidebar />
       <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 lg:flex-row md:py-20 md:px-9'>
         <div className='md:flex-1'>
           <div className='flex justify-center'>
@@ -134,6 +136,7 @@ const Video = () => {
               allowFullScreen
             ></iframe>
           </div>
+       
           <h2 className='text-white mt-3 mb-1 font-medium text-lg'>
             {data?.name}
           </h2>
@@ -160,8 +163,10 @@ const Video = () => {
               </div>
 
               <div className='flex ml-auto md:ml-6'>
-                <button className='text-black bg-white px-2 py-1 rounded-full font-semibold 
-                text-sm'>
+                <button
+                  className='text-black bg-white px-2 py-1 rounded-full font-semibold 
+                text-sm'
+                >
                   Subscribe
                 </button>
               </div>
@@ -273,7 +278,6 @@ const Video = () => {
           </div>
 
           <div className='space-x-4 pt-6'>
-
             {filteredVideos.map((video) => (
               <Link key={video.id} to={`/video/${video.id}`}>
                 <div className='flex space-x-4'>
@@ -283,11 +287,12 @@ const Video = () => {
                     className='w-36 h-20 md:w-48 md:h-28 object-cover rounded-lg'
                   />
                   <div className='flex flex-col'>
-                    <h3 className='text-white font-medium text-base'>
+                    <h3 className='text-white font-medium text-base video-title'>
                       {video.name}
                     </h3>
                     <p className='text-gray text-sm'>
-                      {video.channel}  <br /> {video.views} views <br /> {video.uploadTime}
+                      {video.channel} <br /> {video.views} views <br />{' '}
+                      {video.uploadTime}
                     </p>
                   </div>
                 </div>
@@ -300,4 +305,4 @@ const Video = () => {
   )
 }
 
-export default Video
+export default NonVideo

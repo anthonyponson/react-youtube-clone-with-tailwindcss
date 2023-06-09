@@ -20,6 +20,7 @@ const Home = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
     const category = searchParams.get('category')
+    
     if (category && CategoryItems.includes(category)) {
       setSelectedCategory(category)
     } else {
