@@ -14,7 +14,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import Comment from '../components/Comments'
 import { CategoryItems } from '../static/data'
 import { Link } from 'react-router-dom'
-import Sidebar from '../components/SideBars'
+import Sidebar from '../components/Sidebars'
 
 const Video = () => {
   const [videos, setVideos] = useState([])

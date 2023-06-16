@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import Sidebar from '../components/SideBars'
+import Sidebar from '../components/Sidebars'
 import { stateContext } from '../Context'
 import { CategoryItems } from '../static/data'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
@@ -10,7 +10,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../slices/userSlicer'
 import { storageVideos } from '../storageVideo'
-
+ 
 const Home = () => {
   const [videos, setVideos] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('All')

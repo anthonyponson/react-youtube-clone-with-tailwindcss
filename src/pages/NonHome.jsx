@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import Sidebar from '../components/SideBars'
+import Sidebar from '../components/Sidebars'
 import { stateContext } from '../Context'
 import { CategoryItems } from '../static/data'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
