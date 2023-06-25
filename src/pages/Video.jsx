@@ -147,6 +147,7 @@ const Video = () => {
         <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe
+            key={data?.link}
               className='w-full h-[300px] md:h-[550px] rounded-lg object-contain'
               src={`https://www.youtube.com/embed/${data?.link}`}
               title='YouTube video player'

@@ -76,6 +76,7 @@ export const CategoryItems = [
   'next js',
   'music',
   'anime',
+  'gaming',
   'mrwhosetheboss',
   'genshin impact',
   'mobile',
