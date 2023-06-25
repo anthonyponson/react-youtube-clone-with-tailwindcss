@@ -24,6 +24,7 @@ const Video = () => {
   const [comment, setComment] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [showAllVideos, setShowAllVideos] = useState(false)
+  const [currentVideo, setCurrentVideo] = useState(null)
 
   const { id } = useParams()
   const location = useLocation()
@@ -63,12 +64,20 @@ const Video = () => {
 
   const filteredVideos =
     showAllVideos === true
-      ? videos
+      ? videos.filter((video) => video.id !== id)
       : selectedCategory !== null
-      ? videos.filter((video) => video.category === selectedCategory)
-      : videos.filter(
-          (video) => video.id === id || video.category === data?.category
+      ? videos.filter(
+          (video) => video.category === selectedCategory && video.id !== id
         )
+      : videos
+          .filter(
+            (video) => video.id === id || video.category === data?.category
+          )
+          .filter((video) => video.id !== currentVideo?.id && video.id !== id) // use currentVideo state variable
+
+  const handleVideoClick = (video) => {
+    setCurrentVideo(video) // set currentVideo state variable
+  }
 
   // useEffect to fetch video details from database
   useEffect(() => {
@@ -141,12 +150,11 @@ const Video = () => {
               className='w-full h-[300px] md:h-[550px] rounded-lg object-contain'
               src={`https://www.youtube.com/embed/${data?.link}`}
               title='YouTube video player'
-              frameBorder='0'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
               allowFullScreen
             ></iframe>
           </div>
-       
+
           <h2 className='text-white mt-3 mb-1 font-medium text-lg'>
             {data?.name}
           </h2>

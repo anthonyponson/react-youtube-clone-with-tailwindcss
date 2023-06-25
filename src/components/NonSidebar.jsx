@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { nonUserSideBarItems } from '../static/data'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 
 const NonSidebar = () => {
   const showSidebar = useSelector((state) => state.userInfo.showSidebar)
-  const [active, setActive] = useState('Home')
+  const [active, setActive] = useState('')
+
 
   return (
     <>
@@ -17,14 +18,14 @@ const NonSidebar = () => {
       >
         {/* topitems */}
         <div className='mb-4 space-y-2'>
-        {nonUserSideBarItems.Top.map((item, i) => {
+          {nonUserSideBarItems.Top.map((item, i) => {
             return (
               <Link key={i} to={item.path}>
                 <div
                   className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 ${
-                    item.name === active ? 'bg-light_black' : 'bg-black'
-                  }`}
+                         item.name === active ? 'bg-light_black' : 'bg-black'
+                       }`}
                   onClick={() => setActive(item.name)}
                 >
                   <span className=''>{item.icon}</span>
@@ -62,7 +63,9 @@ const NonSidebar = () => {
             return (
               <Link key={i} to={item.path}>
                 <div>
-                  <h3 className="text-white text-sm px-2 pb-3">sign in to like comment subscribe</h3>
+                  <h3 className='text-white text-sm px-2 pb-3'>
+                    sign in to like comment subscribe
+                  </h3>
                   <div
                     className={`h-10 w-32 space-x-4 flex justify-start items-center py-4 px-4 rounded-full border border-slate-100 cursor-pointer hover:bg-light_black my-1 ${
                       item.iocn === active ? 'bg-light_black' : 'bg-black'
@@ -81,14 +84,14 @@ const NonSidebar = () => {
 
         <div className='mb-4 space-y-2'>
           Explore
-        {nonUserSideBarItems.Bottom.map((item, i) => {
+          {nonUserSideBarItems.Bottom.map((item, i) => {
             return (
               <Link key={i} to={item.path}>
                 <div
                   className={`h-8 space-x-4  flex justify-start items-center px-3 rounded-xl 
                        cursor-pointer hover:bg-light_black my-1 ${
-                    item.name === active ? 'bg-light_black' : 'bg-black'
-                  }`}
+                         item.name === active ? 'bg-light_black' : 'bg-black'
+                       }`}
                   onClick={() => setActive(item.name)}
                 >
                   <span className=''>{item.icon}</span>

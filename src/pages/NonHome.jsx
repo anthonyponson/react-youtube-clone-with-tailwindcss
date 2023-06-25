@@ -13,6 +13,7 @@ import Video from '../components/Video'
 
 const Home = () => {
   const [videos, setVideos] = useState([])
+
   const [selectedCategory, setSelectedCategory] = useState('All')
   const dispatch = useDispatch()
   const location = useLocation()
@@ -25,14 +26,15 @@ const Home = () => {
     } else {
       setSelectedCategory('All')
     }
-  }, [location.search])
+  }, [location.search]) 
 
   useEffect(() => {
-    let q = query(collection(db, 'videos'))
+    let qu = query(collection(db, 'videos'))
+
     if (selectedCategory !== 'All') {
-      q = query(collection(db, 'videos'), where('category', '==', selectedCategory))
+      qu = query(collection(db, 'videos'), where('category', '==', selectedCategory))
     }
-    const unsubscribe = onSnapshot(q, (snapShot) => {
+    const unsubscribe = onSnapshot(qu, (snapShot) => {
       setVideos(
         snapShot.docs.map((doc) => ({
           ...doc.data(),
@@ -71,8 +73,8 @@ const Home = () => {
           {videos.length === 0 ? (
             <div className='h-[86vh]'></div>
           ) : (
-            videos.map((video, index) => (
-              <Link to={`/nonvideo/${video.id}`} key={index}>
+            videos.map((video) => (
+              <Link to={`/nonvideo/${video.id}`} key={video.id}>
                 <Video {...video} />
               </Link>
             ))

@@ -10,6 +10,11 @@ import { useEffect } from 'react'
 import { auth } from './firebase'
 import NonVideo from './pages/NonVideo'
 import NonFav from './pages/NonFav'
+import NonHistory from './pages/NonHistory'
+import History from './pages/History'
+import Fav from './pages/Fav'
+
+
 // import Storage from './pages/storage'
 // import StoVideo from './pages/StoVideo'
 
@@ -36,6 +41,8 @@ function App() {
             <Route path='/video/:id' element={<Video />} />
             {/* <Route path='/storage' element={<Storage />} /> */}
             {/* <Route path='/storage/:id' element={<StoVideo />} /> */}
+            <Route path='/favorites' element={<Fav />} />
+            <Route path='/history' element={<History />} />
             <Route path='*' element={<Navigate to={'/'}></Navigate>} />
           </>
         ) : (
@@ -43,6 +50,7 @@ function App() {
             <Route path='/' element={<NonHome />} />
             <Route path='/nonvideo/:id' element={<NonVideo />}/>
             <Route path='/favorites' element={<NonFav />} />
+            <Route path='/history' element={<NonHistory />} />
           </>
         )}
       </Routes>

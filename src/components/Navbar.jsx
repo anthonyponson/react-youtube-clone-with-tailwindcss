@@ -13,6 +13,7 @@ import { setUser, getUser, toggleSidebar, logout } from '../slices/userSlicer'
 const Navbar = () => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('users'))
+    console.log(storedUser)
     if (storedUser) {
       dispatch(setUser(storedUser))
     }
@@ -20,6 +21,7 @@ const Navbar = () => {
   const dispatch = useDispatch()
   const user = useSelector(getUser)
   const navigate = useNavigate()
+  console.log(user, 'user name')
 
   const [showPopup, setShowPopup] = useState(false)
   const popupRef = useRef(null)
@@ -29,9 +31,7 @@ const Navbar = () => {
     dispatch(setUser(response.user))
     localStorage.setItem('users', JSON.stringify(response.user))
     navigate('/home')
-  
   }
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,7 +60,7 @@ const Navbar = () => {
           </div>
           {/* logo */}
           <div className='py-5 w-28'>
-            <Link to={'/home'}>
+            <Link to={'/'}>
               <img src={logo} alt='' />
             </Link>
           </div>
@@ -128,6 +128,13 @@ const Navbar = () => {
 
             {showPopup && (
               <div className='absolute right-2 mt-44 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10'>
+                <img
+                  className='rounded-full h-10 w-10 ml-2 mt-2'
+                  src={user.photoURL}
+                  alt=''
+                />
+                <h2 className='ml-4 mt-4'>{user.displayName}</h2>
+
                 <Link
                   to='/'
                   className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'

@@ -8,47 +8,17 @@ import { RiShareForwardFill } from 'react-icons/ri'
 import { FaDonate } from 'react-icons/fa'
 import { HiDotsHorizontal } from 'react-icons/hi'
 import { MdOutlineSort } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
-import { getUser, setUser } from '../slices/userSlicer'
-import { onAuthStateChanged } from 'firebase/auth'
-import Comment from '../components/Comments'
 import { CategoryItems } from '../static/data'
 import { Link } from 'react-router-dom'
 import Sidebar from '../components/Sidebars'
 
 const NonVideo = () => {
   const [videos, setVideos] = useState([])
-
-  const [comments, setComments] = useState([])
   const [data, setData] = useState(null)
-  const [comment, setComment] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [showAllVideos, setShowAllVideos] = useState(false)
 
   const { id } = useParams()
-  const location = useLocation()
-  const dispatch = useDispatch()
-  const user = useSelector(getUser)
-
-  const [count, setCount] = useState(
-    parseInt(localStorage.getItem('count')) || 34
-  )
-  const [discount, setDiscount] = useState(
-    parseInt(localStorage.getItem('discount')) || 0
-  )
-
-  const handleLikeClick = () => {
-    setCount(count + 1)
-  }
-
-  const handleDisLikeClick = () => {
-    setDiscount(discount + 1)
-  }
-
-  useEffect(() => {
-    localStorage.setItem('count', count)
-    localStorage.setItem('discount', discount)
-  }, [count, discount])
 
   const q = query
 
@@ -63,14 +33,18 @@ const NonVideo = () => {
 
   const filteredVideos =
     showAllVideos === true
-      ? videos
+      ? videos.filter((video) => video.id !== id) // exclude currently playing video
       : selectedCategory !== null
-      ? videos.filter((video) => video.category === selectedCategory)
+      ? videos.filter(
+          (video) => video.category === selectedCategory && video.id !== id
+        ) // exclude currently playing video
       : videos.filter(
-          (video) => video.id === id || video.category === data?.category
+          (video) =>
+            (video.id === id && !data) || // show only currently playing video if no data is available
+            (video.category === data?.category && video.id !== id) // exclude currently playing video
         )
+  // useEffect to fetch video details from database for recommend videos
 
-  // useEffect to fetch video details from database
   useEffect(() => {
     let q = query(collection(db, 'videos'))
 
@@ -85,41 +59,14 @@ const NonVideo = () => {
     return unsubscribe
   }, [])
 
-  // useEffect to fetch video details for the selected video
   useEffect(() => {
     if (id) {
       const q = query(doc(db, 'videos', id))
-      onSnapshot(q, (snapShot) => {
-        setData(snapShot.data())
-      })
-
-      const commentQuery = query(collection(db, 'videos', id, 'comments'))
-      onSnapshot(commentQuery, (snapShot) => {
-        setComments(
-          snapShot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        )
+      onSnapshot(q, (snapshot) => {
+        setData(snapshot.data())
       })
     }
-  }, [id])
-
-
-  // add comment to database
-  const addComment = async (e) => {
-    e.preventDefault()
-    const commentData = {
-      image: user.photoURL,
-      name: user.displayName,
-      comment,
-      uploaded: timestamp,
-    }
-    if (id) {
-      await addDoc(collection(db, 'videos', id, 'comments'), commentData)
-      setComment('')
-    }
-  }
+  })
 
   return (
     <>
@@ -136,7 +83,7 @@ const NonVideo = () => {
               allowFullScreen
             ></iframe>
           </div>
-       
+
           <h2 className='text-white mt-3 mb-1 font-medium text-lg'>
             {data?.name}
           </h2>
@@ -176,20 +123,11 @@ const NonVideo = () => {
             <div className='flex items-center mt-2 flex-wrap'>
               <div className='flex bg-light_black items-center rounded-full h-10 mx-1 hover:bg-light_1'>
                 <div className='flex px-3 items-center border-r-2 border-r-light_black_1 cursor-pointer'>
-                  <BiLike
-                    type='button'
-                    className='text-white text-2xl'
-                    onClick={handleLikeClick}
-                  />
-                  <p className='text-white pl-2 pr-3 text-sm'>{count}</p>
+                  <BiLike type='button' className='text-white text-2xl' />
                 </div>
 
                 <div className='flex cursor-pointer pl-4 pr-5'>
-                  <BiDislike
-                    className='text-2xl font-extralight text-white'
-                    onClick={handleDisLikeClick}
-                  />
-                  <p className='text-white pl-2 pr-3 text-sm'>{discount}</p>
+                  <BiDislike className='text-2xl font-extralight text-white' />
                 </div>
               </div>
 
@@ -225,35 +163,11 @@ const NonVideo = () => {
 
           <div className='text-white mt-5'>
             <div className='flex item-center'>
-              <h1>{comments.length} comments</h1>
               <div className='flex items-center mx-10 space-x-2'>
                 <MdOutlineSort />
                 <p>sort by</p>
               </div>
             </div>
-            {user && (
-              <form
-                onSubmit={addComment}
-                className='flex items-start w-[50%] pt-4'
-              >
-                <img
-                  src={user?.photoURL}
-                  alt='profile'
-                  className='rounded-full mr-3 h-12 w-12'
-                />
-                <input
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  type='text'
-                  className='bg-transparent border-b w-full focus:outline-none'
-                />
-              </form>
-            )}
-          </div>
-          <div className='mt-4'>
-            {comments.map((item, i) => (
-              <Comment key={i} {...item} />
-            ))}
           </div>
         </div>
 

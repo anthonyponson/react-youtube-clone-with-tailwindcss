@@ -9,7 +9,7 @@ import Video from '../components/Video'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../slices/userSlicer'
-import { storageVideos } from '../storageVideo'
+// import { storageVideos } from '../storageVideo'
  
 const Home = () => {
   const [videos, setVideos] = useState([])

@@ -18,13 +18,13 @@ import { Link } from 'react-router-dom'
 
 export const SideBarItems = {
   Top: [
-    { icon: <AiFillHome size={21} />, name: 'Home' },
+    { icon: <AiFillHome size={21} />, name: 'Home' , path: '/' },
     { icon: <SiYoutubemusic size={21} />, name: 'Shorts' },
     { icon: <MdOutlineSubscriptions size={21} />, name: 'Subscriptions' },
   ],
   Middle: [
-    { icon: <MdVideoLibrary size={21} />, name: 'Library' },
-    { icon: <VscHistory size={21} />, name: 'History' },
+    { icon: <MdVideoLibrary size={21} />, name: 'Library',path:'/favorites' },
+    { icon: <VscHistory size={21} />, name: 'History',path:'/history' },
     { icon: <AiOutlinePlaySquare size={21} />, name: 'Your videos' },
     { icon: <AiOutlineClockCircle size={21} />, name: 'Watch later' },
     { icon: <BiLike size={21} />, name: 'Liked videos' },
@@ -44,18 +44,18 @@ export const SideBarItems = {
 
 export const nonUserSideBarItems = {
   Top: [
-    { icon: <AiFillHome size={21} />, name: 'Home' },
-    { icon: <SiYoutubemusic size={21} />, name: 'Shorts' },
+    { icon: <AiFillHome size={21} />, name: 'Home', path: '/' },
+    { icon: <SiYoutubemusic size={21} />, name: 'Shorts'  },
     { icon: <MdOutlineSubscriptions size={21} />, name: 'Subscriptions' },
   ],
   Middle: [
     { icon: <MdVideoLibrary size={21} />, name: 'Library', path: '/favorites' },
-    { icon: <VscHistory size={21} />, name: 'History' },
+    { icon: <VscHistory size={21} />, name: 'History', path:'/history' },
   ],
 
   SignIn: [
   
-    { icon: <FaUser />, name: 'Sign In ' },
+    { icon: <FaUser />, name: 'Sign In', },
   ],
   Bottom: [
     { icon: <HiOutlineFire size={21} />, name: 'Trending' },
