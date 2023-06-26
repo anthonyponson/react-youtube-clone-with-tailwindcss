@@ -21,7 +21,6 @@ const Navbar = () => {
   const dispatch = useDispatch()
   const user = useSelector(getUser)
   const navigate = useNavigate()
-  console.log(user, 'user name')
 
   const [showPopup, setShowPopup] = useState(false)
   const popupRef = useRef(null)
@@ -46,6 +45,7 @@ const Navbar = () => {
       window.removeEventListener('click', handleClickOutside)
     }
   }, [popupRef])
+
   return (
     <>
       {/* navbar container */}

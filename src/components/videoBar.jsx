@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { nonUserSideBarItems } from '../static/data'
 import { useSelector } from 'react-redux'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
-const NonSidebar = () => {
+const VideoBar = () => {
   const location = useLocation()
-  const showSidebar = useSelector((state) => state.userInfo.showSidebar)
+  const showSidebar = useSelector((state) => state.userInfo.NonshowSidebar)
 
   const [ active, setActive] = useState('') 
 
@@ -107,4 +107,4 @@ const NonSidebar = () => {
   )
 }
 
-export default NonSidebar
+export default VideoBar
