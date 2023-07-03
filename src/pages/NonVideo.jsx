@@ -11,7 +11,7 @@ import { MdOutlineSort } from 'react-icons/md'
 import { CategoryItems } from '../static/data'
 import { Link } from 'react-router-dom'
 import NonSidebar from '../components/NonSidebar'
-import VideoBar from '../components/videoBar'
+
 
 const NonVideo = () => {
   const [videos, setVideos] = useState([])
@@ -73,7 +73,7 @@ const NonVideo = () => {
     <>
       <NonSidebar />
       
-      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 lg:flex-row md:py-20 md:px-9'>
+      <div className='flex flex-col py-10 ml-[13%] md:space-x-4 lg:flex-row md:py-20 md:px-9'>
         <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe

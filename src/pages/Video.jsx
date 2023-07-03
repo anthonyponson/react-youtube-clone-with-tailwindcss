@@ -15,7 +15,6 @@ import Comment from '../components/Comments'
 import { CategoryItems } from '../static/data'
 import { Link } from 'react-router-dom'
 import Sidebar from '../components/Sidebars'
-import UserVideoBar from '../components/userVideoBar'
 
 const Video = () => {
   const [videos, setVideos] = useState([])
@@ -143,8 +142,8 @@ const Video = () => {
 
   return (
     <>
-      <UserVideoBar />
-      <div className='flex flex-col py-10 px-4  bg-black md:space-x-4 lg:flex-row md:py-20 md:px-9'>
+      <Sidebar />
+      <div className='flex flex-col py-10 ml-[13%]  bg-black md:space-x-4 lg:flex-row md:py-20 md:px-9'>
         <div className='md:flex-1'>
           <div className='flex justify-center'>
             <iframe

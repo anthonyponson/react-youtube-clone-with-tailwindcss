@@ -11,6 +11,7 @@ const NonSidebar = () => {
 
   return (
     <>
+    {
         <div
           className={`scrollbar w-52 bg-black h-[calc(100vh-53px)] mt-14 fixed top-0 left-0 text-white p-3 overflow-scroll z-50 nav-menu ${
             showSidebar ? 'active' : ''
@@ -103,8 +104,11 @@ const NonSidebar = () => {
           </div>
           <hr className='text-light_black my-2' />
         </div>
+}
     </>
+          
   )
+          
 }
 
 export default NonSidebar
